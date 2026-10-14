@@ -1,4 +1,4 @@
-# MEDILINK MongoDB + Verified Auth + PayPal API
+# MEDILINK 
 
 ## Requirements
 - Node.js >=22, MongoDB local or MongoDB Atlas, a real SMTP server, Google OAuth web client ID, PayPal REST sandbox credentials.
