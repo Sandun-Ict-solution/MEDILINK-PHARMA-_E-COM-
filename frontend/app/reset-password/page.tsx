@@ -1,0 +1,8 @@
+"use client";
+import {useState,type FormEvent} from "react";
+import {useSearchParams} from "next/navigation";
+import Link from "next/link";
+import {post} from "../api-client";
+export default function Reset(){const token=useSearchParams().get("token")||"";const[password,setPassword]=useState("");const[confirm,setConfirm]=useState("");const[notice,setNotice]=useState("");const[done,setDone]=useState(false);const[busy,setBusy]=useState(false);
+async function submit(e:FormEvent){e.preventDefault();if(password!==confirm){setNotice("Passwords do not match");return}setBusy(true);try{const r=await post<{message:string}>("/auth/reset-password",{token,password});setNotice(r.message);setDone(true)}catch(e){setNotice(e instanceof Error?e.message:"Reset failed")}finally{setBusy(false)}}
+return <main className="adminLoginBackdrop"><section className="adminLoginCard"><Link href="/account" className="adminBack">← Back to login</Link><div className="adminEmblem">✚</div><p className="kicker">MEDILINK · ACCOUNT SECURITY</p><h1>Set a new password</h1>{!done?<form onSubmit={submit}><label>New password (10+ characters)<input type="password" minLength={10} maxLength={128} required value={password} onChange={e=>setPassword(e.target.value)}/></label><label>Confirm new password<input type="password" minLength={10} required value={confirm} onChange={e=>setConfirm(e.target.value)}/></label><button className="primaryBtn" disabled={busy||!token}>{busy?"Updating…":"Reset password"}</button></form>:<Link href="/secure-admin/login" className="primaryBtn">Go to admin login →</Link>}{notice&&<p role="status">{notice}</p>}</section></main>}

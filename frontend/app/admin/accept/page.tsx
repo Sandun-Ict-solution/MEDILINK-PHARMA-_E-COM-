@@ -1,0 +1,5 @@
+"use client";
+import {useState} from "react";
+import Link from "next/link";
+import {api} from "../../api-client";
+export default function Accept(){const [message,setMessage]=useState("");const [busy,setBusy]=useState(false);async function accept(){setBusy(true);try{const token=new URLSearchParams(window.location.search).get("token");if(!token)throw new Error("Invitation token missing");await api("/admin/invitations/accept",{method:"POST",body:JSON.stringify({token})});window.history.replaceState(null,"","/admin/accept");setMessage("Access approved. Open the admin login page.");}catch(e){setMessage(e instanceof Error?e.message:"Unable to accept invitation");}finally{setBusy(false);}}return <main className="adminLoginBackdrop"><section className="adminLoginCard"><h1>Administrator invitation</h1><p>First sign in to your existing verified MEDILINK account using the same invited email address.</p><button onClick={accept} className="primaryBtn" disabled={busy}>Accept invitation</button><p role="status">{message}</p><p><Link href="/account">Customer sign in</Link> · <Link href="/admin/login">Admin sign in</Link></p></section></main>}
